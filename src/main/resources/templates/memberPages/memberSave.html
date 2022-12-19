@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <title>memberSave</title>
   <link rel="stylesheet" th:href="@{/css/bootstrap.rtl.min.css}">
+  <script th:src="@{/js/jquery.js}"></script>
+  <!--    Axios cdn_아래 코드    -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <style>
     #write-form {
       width: 800px;
@@ -14,7 +17,8 @@
 <body>
 <div class="container" id="write-form">
   <form action="/member/save" method="post" enctype="multipart/form-data">
-    <input type="text" name="memberEmail" placeholder="이메일입력" class="form-control"><br>
+    <input type="text" name="memberEmail" id="memberEmail" placeholder="이메일입력" onblur="duplicateCheck()" class="form-control"><br>
+    <span id="duplicateEmail"></span>
     <input type="text" name="memberPassword" placeholder="비밀번호입력" class="form-control"><br>
     <input type="text" name="memberName" placeholder="이름입력" class="form-control"><br>
     <input type="text" name="memberMobile" placeholder="핸드폰번호입력" class="form-control"><br>
@@ -25,4 +29,41 @@
 </div>
 
 </body>
+<script th:inline="javascript">
+  const duplicateCheck = () => {
+    const email = document.getElementById("memberEmail").value;
+    const duplicateEmail = document.getElementById("duplicateEmail");
+    axios({
+      method: "post",
+      url: "/member/dup-check",
+      params: {
+        inputEmail: email
+      }
+    }).then(res => {
+      duplicateEmail.innerHTML = "사용가능한 이메일 입니다";
+      duplicateEmail.style.color = "green";
+    }).catch(res => {
+      duplicateEmail.innerHTML = "이미 사용중인 이메일 입니다";
+      duplicateEmail.style.color = "red";
+    })
+  }
+
+</script>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
