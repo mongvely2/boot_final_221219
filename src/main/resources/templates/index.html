@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.rtl.min.css}">
 </head>
 <body>
-$END$
+<th:block th:replace="commonPages/header :: header"></th:block>
+<div class="container">
+    <a href="/member/save" class="btn btn-primary">회원가입</a>
+    <a href="/member/login" class="btn btn-primary">로그인</a>
+    <a href="/board/boardList" class="btn btn-primary">글목록</a>
+
+</div>
+
+
 </body>
 </html>
