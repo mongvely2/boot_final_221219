@@ -49,7 +49,7 @@ public class MemberController {
                         HttpSession session) {
         MemberDTO memberLogin = memberService.login(memberDTO);
         session.setAttribute("loginSession", memberLogin);
-        return "index";
+        return "boardPages/paging";
     }
 
 }
