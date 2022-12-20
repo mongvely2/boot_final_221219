@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>boardDetail</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.rtl.min.css}">
+    <script th:src="@{/js/axios.min.js}"></script>
+    <script th:src="@{/js/jquery.js}"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <table class="table table-hover table-striped">
+        <tr>
+            <th>번호</th>
+            <td th:text="${board.id}"></td>
+        </tr>
+        <tr>
+            <th>제목</th>
+            <td th:text="${board.boardTitle}"></td>
+        </tr>
+        <tr>
+            <th>작성자</th>
+            <td th:text="${board.boardWriter}"></td>
+        </tr>
+        <tr>
+            <th>내용</th>
+            <td th:text="${board.boardContents}"></td>
+        </tr>
+        <tr>
+            <th>조회수</th>
+            <td th:text="${board.boardHits}"></td>
+        </tr>
+        <tr>
+            <th>작성시간</th>
+            <td th:text="${board.boardCreatedDate}"></td>
+        </tr>
+        <tr th:if="${board.fileAttached == 'Y'}">
+            <th>첨부파일</th>
+            <!--         WebConfig 설정 클래스 생성하여 정리해줘야 함       -->
+            <td th:each="fileName: ${board.storedFileName}">
+                <img th:src="@{|/upload/${fileName}}" alt="" width="300" height="300">
+            </td>
+        </tr>
+
+
+
+
+
+    </table>
+
+</div>
+</body>
+</html>

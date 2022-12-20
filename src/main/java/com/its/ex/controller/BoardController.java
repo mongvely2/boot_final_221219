@@ -9,8 +9,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/board")
@@ -18,10 +20,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class BoardController {
     private final BoardService boardService;
 
-    @GetMapping("/boardSave")
+    @GetMapping("/save")
     public String saveForm() {
         return "boardPages/boardSave";
     }
+
+    @PostMapping("/save")
+    public String save(@ModelAttribute BoardDTO boardDTO) throws IOException {
+        boardService.save(boardDTO);
+        return "redirect:/board";
+    }
+
+    @GetMapping("{id}")
+    public String findById(@PathVariable Long id, Model model,
+                         @PageableDefault(page = 1) Pageable pageable) {
+//        조회수 1증가
+        boardService.updateHits(id);
+        BoardDTO boardDTO = boardService.findById(id);
+        model.addAttribute("board", boardDTO);
+        model.addAttribute("page", pageable.getPageNumber());
+        System.out.println("boardDTO origin = " + boardDTO.getOriginalFileName() + "...stored..." + boardDTO.getStoredFileName());
+        System.out.println("boardDTO = " + boardDTO);
+        return "boardPages/boardDetail";
+    }
+
 
     @GetMapping
     public String paging(@PageableDefault(page = 1)Pageable pageable,

@@ -24,8 +24,8 @@ public class MemberService {
             MultipartFile memberFile = memberDTO.getMemberFile();
             String originalFileName = memberFile.getOriginalFilename();
             String storedFileName = System.currentTimeMillis() + "_" + originalFileName;
-            String savePath = "D:\\boot_final_profile\\" + storedFileName;
-            memberFile.transferTo(new File(savePath));
+            String profilePath = "D:\\boot_final_profile\\" + storedFileName;
+            memberFile.transferTo(new File(profilePath));
             memberDTO.setOriginalFileName(originalFileName);
             memberDTO.setStoredFileName(storedFileName);
             MemberEntity memberEntity = MemberEntity.toSaveFileEntity(memberDTO);

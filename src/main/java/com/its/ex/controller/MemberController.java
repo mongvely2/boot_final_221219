@@ -49,7 +49,8 @@ public class MemberController {
                         HttpSession session) {
         MemberDTO memberLogin = memberService.login(memberDTO);
         session.setAttribute("loginSession", memberLogin);
-        return "boardPages/paging";
+//        session.setAttribute("loginEmail", memberLogin.getMemberEmail());
+        return "redirect:/board";
     }
 
 }

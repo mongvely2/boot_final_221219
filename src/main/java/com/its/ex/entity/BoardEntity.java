@@ -1,7 +1,9 @@
 package com.its.ex.entity;
 
+import com.its.ex.dto.BoardDTO;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -30,7 +32,8 @@ public class BoardEntity extends BaseEntity{
     private int boardHits;
 
     @Column(length = 5)
-    private String fileAttached;
+    @ColumnDefault("N")
+    private String fileAttached;    // Y or N
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -41,6 +44,30 @@ public class BoardEntity extends BaseEntity{
 
     @OneToMany(mappedBy = "boardEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CommentEntity> commentEntityList = new ArrayList<>();
+
+    public static BoardEntity toSaveEntity(BoardDTO boardDTO, MemberEntity memberEntity) {
+        BoardEntity boardEntity = new BoardEntity();
+        boardEntity.setBoardTitle(boardDTO.getBoardTitle());
+        boardEntity.setBoardWriter(boardDTO.getBoardWriter());
+        boardEntity.setBoardContents(boardDTO.getBoardContents());
+        boardEntity.setBoardHits(0);
+        boardEntity.setFileAttached("N");
+        boardEntity.setMemberEntity(memberEntity);
+        return boardEntity;
+    }
+
+    public static BoardEntity toSaveFileEntity(BoardDTO boardDTO, MemberEntity memberEntity) {
+        BoardEntity boardEntity = new BoardEntity();
+        boardEntity.setBoardTitle(boardDTO.getBoardTitle());
+        boardEntity.setBoardWriter(boardDTO.getBoardWriter());
+        boardEntity.setBoardContents(boardDTO.getBoardContents());
+        boardEntity.setBoardHits(0);
+        boardEntity.setFileAttached("Y");
+        boardEntity.setMemberEntity(memberEntity);
+        return boardEntity;
+    }
+
+
 }
 
 
