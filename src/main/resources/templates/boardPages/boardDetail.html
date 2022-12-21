@@ -42,13 +42,131 @@
                 <img th:src="@{|/upload/${fileName}}" alt="" width="300" height="300">
             </td>
         </tr>
-
-
-
-
-
     </table>
+    <div class="container">
+        <th>
+        <button onclick="listReq()" class="btn btn-primary">글목록</button>
+        </th>
+        <th th:if="${board.boardWriter == session.loginEmail}">
+        <button onclick="updateReq()" class="btn btn-primary">수정</button>
+        <button onclick="deleteReq()" class="btn btn-primary">삭제</button>
+        </th>
+    </div>
+</div>
 
+<div class="container mt-5" id="comment-write">
+    <div class="input-group-sm mb-3">
+        <div class="form-floating">
+            <input type="hidden" id="memberId" th:value="${session.loginSession.id}">
+            <input type="text" id="commentWriter" th:value="${board.boardWriter}" readonly class="form-control">
+            <label for="commentWriter">작성자</label>
+        </div>
+        <div class="form-floating">
+            <input type="text" id="commentContents" placeholder="내용" class="form-control">
+            <label for="commentContents">내용</label>
+        </div>
+        <button id="comment-write-btn" onclick="commentWrite()" class="btn btn-secondary">작성</button>
+    </div>
+</div>
+
+<div class="container mt-5" id="comment-list">
+    <div th:if="${commentList == 'empty'}">
+        <p>작성된 댓글이 없습니다</p>
+    </div>
+    <div th:unless="${commentList == 'empty'}">
+        <table class="table">
+            <tr>
+                <th>댓글번호</th>
+                <th>작성자</th>
+                <th>내용</th>
+                <th>작성시간</th>
+            </tr>
+            <tr th:each="comment: ${commentList}">
+                <td th:text="${comment.id}"></td>
+                <td th:text="${comment.commentWriter}"></td>
+                <td th:text="${comment.commentContents}"></td>
+                <td th:text="*{#temporals.format(comment.commentCreatedDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            </tr>
+        </table>
+    </div>
 </div>
 </body>
+<script th:inline="javascript">
+    const listReq = () => {
+        const page = [[${page}]];
+        location.href = "/board?page="+page;
+        console.log(page)
+    }
+
+    const commentWrite = () => {
+        const writer = document.getElementById("commentWriter").value;
+        const contents = document.getElementById("commentContents").value;
+        const board = [[${board.id}]]
+        const member = document.getElementById("memberId").value;
+        console.log(writer, contents)
+
+        axios({
+            method: "post",
+            url: "/comment/save",
+            data: {
+                commentWriter: writer,
+                commentContents: contents,
+                boardId: board,
+                memberId: member
+            }
+        }).then(res => {
+            console.log(res.data)
+            const commentList = res.data;
+            let output = "<table class='table'>";
+            // == 넣을시 최종 마지막에 입력한 값만 나옴, += 사용시 누적해서 데이터 쌓임
+            output += "<tr><th>댓글번호</th>";
+            output += "<th>작성자</th>";
+            output += "<th>내용</th>";
+            output += "<th>작성시간</th></tr>";
+            // i=인덱스 같은 역할, 반복변수로 활용
+            for (let i in commentList) {
+                output += "<tr>";
+                output += "<td>" + commentList[i].id + "</td>";
+                output += "<td>" + commentList[i].commentWriter + "</td>";
+                output += "<td>" + commentList[i].commentContents + "</td>";
+                // moment: 자바스크립트에서 제공하는 라이브러리 날짜값 사용하는 함수
+                output += "<td>" + moment(commentList[i].commentCreatedDate).format("YYYY-MM-DD HH:mm:ss") + "</td>";
+                output += "</tr>";
+            }
+            output += "</table>";
+
+            document.getElementById('comment-list').innerHTML = output;
+            // 새로 작성하는 칸을 위해 공란으로 표시
+            // document.getElementById('commentWriter').value = '';
+            document.getElementById('commentContents').value = '';
+        }).catch(err => {
+
+        })
+    }
+
+</script>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

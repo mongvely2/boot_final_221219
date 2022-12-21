@@ -49,8 +49,14 @@ public class MemberController {
                         HttpSession session) {
         MemberDTO memberLogin = memberService.login(memberDTO);
         session.setAttribute("loginSession", memberLogin);
-//        session.setAttribute("loginEmail", memberLogin.getMemberEmail());
+        session.setAttribute("loginEmail", memberLogin.getMemberEmail());
         return "redirect:/board";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "index";
     }
 
 }

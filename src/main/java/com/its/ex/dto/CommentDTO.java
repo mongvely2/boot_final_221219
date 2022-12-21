@@ -1,5 +1,6 @@
 package com.its.ex.dto;
 
+import com.its.ex.entity.CommentEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,5 +19,17 @@ public class CommentDTO {
 
     private Long memberId;
     private Long boardId;
+
+    public static CommentDTO toCommentDTO(CommentEntity commentEntity) {
+        CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setId(commentEntity.getId());
+        commentDTO.setCommentWriter(commentEntity.getCommentWriter());
+        commentDTO.setCommentContents(commentEntity.getCommentContents());
+        commentDTO.setCommentCreatedDate(commentEntity.getCreatedTime());
+        commentDTO.setCommentUpdateDate(commentEntity.getUpdatedTime());
+        commentDTO.setMemberId(commentEntity.getMemberEntity().getId());
+        commentDTO.setBoardId(commentEntity.getBoardEntity().getId());
+        return commentDTO;
+    }
 
 }

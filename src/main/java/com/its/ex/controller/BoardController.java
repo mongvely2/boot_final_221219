@@ -1,8 +1,10 @@
 package com.its.ex.controller;
 
 import com.its.ex.dto.BoardDTO;
+import com.its.ex.dto.CommentDTO;
 import com.its.ex.repository.BoardRepository;
 import com.its.ex.service.BoardService;
+import com.its.ex.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,12 +15,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping("/board")
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService boardService;
+    private final CommentService commentService;
 
     @GetMapping("/save")
     public String saveForm() {
@@ -33,14 +37,22 @@ public class BoardController {
 
     @GetMapping("{id}")
     public String findById(@PathVariable Long id, Model model,
-                         @PageableDefault(page = 1) Pageable pageable) {
+                           @PageableDefault(page = 1) Pageable pageable) {
 //        조회수 1증가
         boardService.updateHits(id);
         BoardDTO boardDTO = boardService.findById(id);
+
+        List<CommentDTO> commentDTOList = commentService.findAll(id);
+        if (commentDTOList.size() > 0) {
+            model.addAttribute("commentList", commentDTOList);
+        } else {
+            model.addAttribute("commentList", "empty");
+        }
+
         model.addAttribute("board", boardDTO);
         model.addAttribute("page", pageable.getPageNumber());
-        System.out.println("boardDTO origin = " + boardDTO.getOriginalFileName() + "...stored..." + boardDTO.getStoredFileName());
-        System.out.println("boardDTO = " + boardDTO);
+        System.out.println("pageable = " + pageable.getPageNumber());
+        System.out.println("pageable = " + pageable);
         return "boardPages/boardDetail";
     }
 
@@ -48,6 +60,7 @@ public class BoardController {
     @GetMapping
     public String paging(@PageableDefault(page = 1)Pageable pageable,
                          Model model) {
+        System.out.println("pageable = " + pageable);
         Page<BoardDTO> boardDTOList = boardService.paging(pageable);
         model.addAttribute("boardList", boardDTOList);
 //        start 페이지 end 페이지 계산방식 -> 삼항연산자 사용

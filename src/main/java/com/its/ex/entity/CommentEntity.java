@@ -1,5 +1,6 @@
 package com.its.ex.entity;
 
+import com.its.ex.dto.CommentDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,8 +10,8 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@Table
-public class CommentEntity {
+@Table(name = "comment_table")
+public class CommentEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,11 +22,11 @@ public class CommentEntity {
     @Column(length = 200)
     private String commentContents;
 
-    @Column
-    private LocalDateTime commentCreatedTime;
-
-    @Column
-    private LocalDateTime commentUpdateTime;
+//    @Column
+//    private LocalDateTime commentCreatedTime;
+//
+//    @Column
+//    private LocalDateTime commentUpdateTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -34,5 +35,16 @@ public class CommentEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private BoardEntity boardEntity;
+
+    public static CommentEntity toSaveCommentEntity(CommentDTO commentDTO,
+                                                    BoardEntity board,
+                                                    MemberEntity member) {
+        CommentEntity commentEntity = new CommentEntity();
+        commentEntity.setCommentWriter(commentDTO.getCommentWriter());
+        commentEntity.setCommentContents(commentDTO.getCommentContents());
+        commentEntity.setBoardEntity(board);
+        commentEntity.setMemberEntity(member);
+        return commentEntity;
+    }
 
 }
