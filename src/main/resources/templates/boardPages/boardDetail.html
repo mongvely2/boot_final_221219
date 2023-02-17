@@ -92,6 +92,11 @@
 </div>
 </body>
 <script th:inline="javascript">
+
+    const updateReq = () => {
+        location.href = "/board/update/"+[[${board.id}]]
+    }
+
     const listReq = () => {
         const page = [[${page}]];
         location.href = "/board?page="+page;

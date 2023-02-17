@@ -51,8 +51,8 @@ public class BoardController {
 
         model.addAttribute("board", boardDTO);
         model.addAttribute("page", pageable.getPageNumber());
-        System.out.println("pageable = " + pageable.getPageNumber());
-        System.out.println("pageable = " + pageable);
+
+        System.out.println("boardDTO123 = " + boardDTO);
         return "boardPages/boardDetail";
     }
 
@@ -80,6 +80,14 @@ public class BoardController {
         model.addAttribute("endPage", endPage);
 
         return "boardPages/paging";
+    }
+
+    @GetMapping("/update/{id}")
+    public String updateForm(@PathVariable Long id,
+                             Model model) {
+//        BoardDTO boardDTO = boardService.findById(id);
+        model.addAttribute("board", boardService.findById(id));
+        return "boardPages/boardUpdate";
     }
 
 }

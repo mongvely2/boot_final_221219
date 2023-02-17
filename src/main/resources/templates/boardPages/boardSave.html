@@ -14,6 +14,7 @@
 <body>
 <th:block th:replace="commonPages/header :: header"></th:block>
 
+
 <div class="container" id="write-form">
     <form action="/board/save" method="post" enctype="multipart/form-data">
         작성자: <input type="text" name="boardWriter" th:value="${session.loginSession.memberEmail}" class="form-control" readonly>
